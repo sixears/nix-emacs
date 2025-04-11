@@ -5,14 +5,20 @@
     nixpkgs.url     = github:NixOS/nixpkgs/d9d87c51; # nixos-24.11 2024-12-11
     flake-utils.url = github:numtide/flake-utils/c0e246b9;
     hpkgs1.url      = github:sixears/hpkgs1/r0.0.37.0;
+    myPkgs          = {
+      url    = github:sixears/nix-pkgs/r0.0.13.0;
+#      url    = path:/home/martyn/nix/pkgs;
+      inputs = { nixpkgs.follows = "nixpkgs"; };
+    };
   };
 
-  outputs = { self, nixpkgs, flake-utils, hpkgs1 }:
+  outputs = { self, nixpkgs, flake-utils, hpkgs1, myPkgs }:
     flake-utils.lib.eachSystem ["x86_64-linux"] (system:
       let
-        pkgs        = nixpkgs.legacyPackages.${system};
-        hpkgs       = hpkgs1.packages.${system};
-        hlib        = hpkgs1.lib.${system};
+        pkgs    = nixpkgs.legacyPackages.${system};
+        hpkgs   = hpkgs1.packages.${system};
+        hlib    = hpkgs1.lib.${system};
+        my-pkgs = myPkgs.packages.${system};
 
         # -- emacs ---------------------
 
@@ -67,8 +73,9 @@
           packages = flake-utils.lib.flattenTree (with pkgs; {
             emacs = emacs-with-packages;
             emacs-server =
-              import ./pkgs/emacs-server.nix {
+              import ./src/emacs-server.nix {
                 inherit pkgs emacs-with-packages;
+                inherit (my-pkgs) paths;
               };
           });
         }
