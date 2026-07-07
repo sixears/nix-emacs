@@ -2,11 +2,11 @@
   description = "emacs for nix";
 
   inputs = {
-    nixpkgs.url     = github:NixOS/nixpkgs/d9d87c51; # nixos-24.11 2024-12-11
+    nixpkgs.url     = github:NixOS/nixpkgs/667d5cf1; # nixos-26.05 2026-06-26
     flake-utils.url = github:numtide/flake-utils/c0e246b9;
-    hpkgs1.url      = github:sixears/hpkgs1/r0.0.37.0;
+    hpkgs1.url      = github:sixears/hpkgs1/r0.0.58.0;
     myPkgs          = {
-      url    = github:sixears/nix-pkgs/r0.0.13.0;
+      url    = github:sixears/nix-pkgs/r0.0.16.0;
 #      url    = path:/home/martyn/nix/pkgs;
       inputs = { nixpkgs.follows = "nixpkgs"; };
     };
@@ -35,7 +35,9 @@
             flycheck-haskell
             fontawesome
             haskell-mode
-            haskell-unicode-input-method
+            # error: emacsPackages.haskell-unicode-input-method is contained in
+            #        emacsPackages.haskell-mode, please use that instead.
+            # haskell-unicode-input-method
             iedit
             ivy
             ligature
